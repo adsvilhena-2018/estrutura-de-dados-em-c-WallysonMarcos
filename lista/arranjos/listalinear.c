@@ -9,18 +9,37 @@ typedef struct tList
 } oList;
 
 
-void SetLastPos (oList * pList, int value)
+void InsertFim (oList *pList, int nvalue)
 {
-  pList->nLastPos += value;
+    pList->nLastPos = pList->nLastPos + 1;
+    pList->aValues[pList->nLastPos] = nvalue;
 }
 
-void InsertFim (oList * pList, int nvalue)
+void InsetInto (oList *pList, int pos, int value)
 {
-  SetLastPos (pList, 1);
-  pList->aValues[pList->nLastPos] = nvalue;
+    int lSetArray = 1;
+    //Valida se a possiC'C#o C) valida
+    if (pos > pList->nLastPos || pos < 0)
+        lSetArray = 0;
+
+    if (lSetArray == 1)
+    {
+        printf ("Inserindo %d no  Meio \n", value);
+        //Incrementa +1 pos no array
+        pList->nLastPos = pList->nLastPos + 1;
+        //Realoca o array atC) a posiC'C#o desejada
+        for (int i = pList->nLastPos; i > pos; i--)
+        pList->aValues[i] = pList->aValues[i - 1];
+        pList->aValues[pos] = value;
+    }
+    else
+    {
+        printf ("Inserindo Fim \n");
+        InsertFim (pList, value);
+    }
 }
 
-void InsetInto (oList * pList, int pos, int value)
+void Remove (oList *pList, int pos)
 {
   int lSetArray = 1;
   //Valida se a possiC'C#o C) valida
@@ -28,76 +47,47 @@ void InsetInto (oList * pList, int pos, int value)
     lSetArray = 0;
 
   if (lSetArray == 1)
-    {
-      printf ("Inserindo Meio \n");
-      //Incrementa +1 pos no array
-      SetLastPos (pList, 1);
-      //Realoca o array atC) a posiC'C#o desejada
-      for (int i = pList->nLastPos; i > pos; i--)
-	pList->aValues[i] = pList->aValues[i - 1];
-      //seta o novo valor para posiC'C#o desejada
-      pList->aValues[pos] = value;
-    }
-  else
-    {
-      printf ("Inserindo Fim \n");
-      InsertFim (&pList, value);
-    }
-}
-
-void Remove (oList * pList, int pos)
-{
-  int lSetArray = 1;
-  //Valida se a possiC'C#o C) valida
-  if (pos > pList->nLastPos || pos < 0)
-    lSetArray = 0;
-
-  if (lSetArray == 1)
-    {
+  {
+      printf ("Removendo pos %d \n", pos);
       for (int i = 0; i <= pList->nLastPos; i++)
-	{
-	  if (i < pos)
-	    continue;
+      {
+          if (i < pos)
+            continue;
 
-	  pList->aValues[i] = pList->aValues[i + 1];
-	}
-      SetLastPos (&pList, -1);
-    }
-  else
-    {
+          pList->aValues[i] = pList->aValues[i + 1];
+      }
+      pList->nLastPos = pList->nLastPos - 1;
+  }
+  else{
       printf ("Imposivel remover na pos %d \n", pos);
-    }
+  }
 }
 
-void PrintList (oList pList)
+void PrintList (oList *pList)
 {
-  for (int i = 0; i <= pList.nLastPos; i++)
+  for (int i = 0; i <= pList->nLastPos; i++)
     {
-      printf ("Pos: %d Valor: %d \n", i, pList.aValues[i]);
+      printf ("Pos: %d Valor: %d \n", i, pList->aValues[i]);
     }
 }
 
-
-int
-main ()
+int main ()
 {
   oList pList;
   pList.nLastPos = -1;
 
-  printf ("Tamanho inicial: %d \n", pList.nLastPos);
+  printf ("Tamanho Atual: %d \n", pList.nLastPos);
   InsertFim (&pList, 10);
   InsertFim (&pList, 20);
   InsertFim (&pList, 40);
-  PrintList (pList);
-  printf ("Tamanho Atual: %d \n", pList.nLastPos);
+  PrintList (&pList);
   InsetInto (&pList, 2, 30);
   InsetInto (&pList, 5, 60);
   InsetInto (&pList, 4, 50);
-  PrintList (pList);
+  PrintList (&pList);
 
-  printf ("Tamanho Atual: %d \n", pList.nLastPos);
   Remove (&pList, 3);
-  PrintList (pList);
+  PrintList (&pList);
   //system("pause");
   return 0;
 }
