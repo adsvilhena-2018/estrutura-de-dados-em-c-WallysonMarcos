@@ -5,15 +5,18 @@ typedef struct tList
 {
   int aValues[255];
   int nLastPos;
+  int nInitPos;
 
 } oList;
 
 
 void InsertFim (oList *pList, int nvalue)
 {
+    printf ("Inserindo %d no Fim \n", nvalue);
     pList->nLastPos = pList->nLastPos + 1;
     pList->aValues[pList->nLastPos] = nvalue;
 }
+
 
 void InsetInto (oList *pList, int pos, int value)
 {
@@ -29,12 +32,12 @@ void InsetInto (oList *pList, int pos, int value)
         pList->nLastPos = pList->nLastPos + 1;
         //Realoca o array atC) a posiC'C#o desejada
         for (int i = pList->nLastPos; i > pos; i--)
-        pList->aValues[i] = pList->aValues[i - 1];
+            pList->aValues[i] = pList->aValues[i - 1];
+
         pList->aValues[pos] = value;
     }
     else
     {
-        printf ("Inserindo Fim \n");
         InsertFim (pList, value);
     }
 }
@@ -42,39 +45,38 @@ void InsetInto (oList *pList, int pos, int value)
 void Remove (oList *pList, int pos)
 {
   int lSetArray = 1;
-  //Valida se a possiC'C#o C) valida
-  if (pos > pList->nLastPos || pos < 0)
+
+  if (pos > pList->nLastPos || pos <= 0)
     lSetArray = 0;
 
   if (lSetArray == 1)
   {
       printf ("Removendo pos %d \n", pos);
-      for (int i = 0; i <= pList->nLastPos; i++)
+
+      for (int i = 1; i <= pList->nLastPos; i++)
       {
           if (i < pos)
             continue;
-
           pList->aValues[i] = pList->aValues[i + 1];
       }
       pList->nLastPos = pList->nLastPos - 1;
   }
-  else{
+  else
+  {
       printf ("Imposivel remover na pos %d \n", pos);
   }
 }
 
 void PrintList (oList *pList)
 {
-  for (int i = 0; i <= pList->nLastPos; i++)
-    {
+    for (int i = 1; i <= pList->nLastPos; i++)
       printf ("Pos: %d Valor: %d \n", i, pList->aValues[i]);
-    }
 }
 
 int main ()
 {
   oList pList;
-  pList.nLastPos = -1;
+  pList.nLastPos = 0;
 
   printf ("Tamanho Atual: %d \n", pList.nLastPos);
   InsertFim (&pList, 10);
@@ -86,7 +88,9 @@ int main ()
   InsetInto (&pList, 4, 50);
   PrintList (&pList);
 
-  Remove (&pList, 3);
+  Remove (&pList, 0);
+  Remove (&pList, 1);
+  Remove (&pList, 5);
   PrintList (&pList);
   //system("pause");
   return 0;
